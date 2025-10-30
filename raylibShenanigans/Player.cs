@@ -18,13 +18,16 @@ namespace raylibShenanigans
 {
     internal class Player
     {
-      
         private const int MOVE_FOWARD = 50;
-        private Image playerSprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-        private Image bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+        //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+        //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+
+        // Spirites and textures
+        private Image playerSprite;
+        private Image bodySprite;
         private Texture2D playerTexture;
         private Texture2D bodyTexture;
-
+        //malbetam po gsm
         // How long the body should be
         private List<int> body;
         private Set headPoses;
@@ -36,13 +39,16 @@ namespace raylibShenanigans
         private bool facingDown;
         private bool sittingStill;
         private bool alive;
-        private bool justAte;
-
 
         // Vars for the sprite a 50x50 square
         private Rectangle playerVars;
 
+        public Player() { }
         public Player(int x, int y) {
+            // Textures and sprites
+            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+
             playerVars.X = x;
             playerVars.Y = y;
             playerVars.Width = 50;
@@ -54,7 +60,6 @@ namespace raylibShenanigans
             facingDown = false;
             sittingStill = true;
             alive = true;
-            justAte = false;
 
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
@@ -67,45 +72,29 @@ namespace raylibShenanigans
             
             bodyTexture = Raylib.LoadTextureFromImage(bodySprite);
             playerTexture = Raylib.LoadTextureFromImage(playerSprite);
-            int distance = 50;
-            for (int i = 0; i < body.Count();i++)
+
+            for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++)
             {
-                if(body.Count() == 1){
-                    Raylib.DrawTexture(playerTexture, (int)playerVars.X, (int)playerVars.Y, Color.White);
-                    if (facingDown)
-                        Raylib.DrawTexture(bodyTexture, (int)playerVars.X, (int)playerVars.Y - distance, Color.White);
-                    else if (facingUp)
-                        Raylib.DrawTexture(bodyTexture, (int)playerVars.X, (int)playerVars.Y + distance, Color.White);
-                    else if (facingRight)
-                        Raylib.DrawTexture(bodyTexture, (int)playerVars.X - distance, (int)playerVars.Y, Color.White);
-                    else if (facingLeft)
-                        Raylib.DrawTexture(bodyTexture, (int)playerVars.X + distance, (int)playerVars.Y, Color.White);
-                }
+                if (h == 0)
+                    Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
                 else
-                {                   
-                    for (int j = headPoses.count() - 1,h = 0; j > body.Count() - 1; j--,h++){
-                        if(h == 0)
-                            Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                        else
-                            Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                    }
-                }
+                    Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
             }
         }
         // Score
         public void drawScore()
         {
-            Raylib.DrawText("SCORE: " + Convert.ToString(body.Count()-1),630,40,35,Color.Black);
+            Raylib.DrawText("SCORE: " + Convert.ToString(body.Count-1),630,40,35,Color.Black);
         }
         
         // Collision
         private bool checkIfColliding()
         {
-            for (int i = 0; i < body.Count(); i++)
+            for (int i = 0; i < body.Count; i++)
             {
-                if (body.Count() > 5)
+                if (body.Count > 5)
                 {
-                    for (int j = headPoses.count() - 1; j > body.Count() - 1; j--){
+                    for (int j = headPoses.count() - 1; j > body.Count - 1; j--){
                         return Raylib.CheckCollisionRecs(playerVars,new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y,50,50));
                         //Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
                     }
@@ -113,10 +102,21 @@ namespace raylibShenanigans
             }
             return false;
         }
-        public void gameOver()
-        {
+        public void gameOver(){
             alive = false;
-            Raylib.DrawText("YOU DIED", 620, 250, 50, Color.Black);
+            Raylib.DrawText("YOU DIED", 580, 250, 50, Color.Black);
+            Raylib.DrawText("You collided with yourself", 520, 300, 30, Color.Black);
+
+            Raylib.DrawRectangle(630,350,150,50,Color.Gray);
+            Raylib.DrawText("Restart",655,365, 25,Color.Black);
+
+            if (Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(),new Rectangle( 630,350,150,50 ))){
+                Raylib.DrawRectangle(630, 350, 150, 50, Color.Green);
+                Raylib.DrawText("Restart", 655, 365, 25, Color.Black);
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+                    reset();
+                
+            }
 
         }
 
@@ -228,9 +228,10 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveLeft();
                 eatCherry(gameField);
-                if (checkIfColliding())
+                if (checkIfColliding() || headPoses.getWrongPosesDeath())
                     gameOver();
-
+                handleHeadPoses();
+                
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.D) || Raylib.IsKeyPressed(KeyboardKey.Right))
             {
@@ -238,9 +239,9 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveRight();
                 eatCherry(gameField);
-                if (checkIfColliding())
+                if (checkIfColliding() || headPoses.getWrongPosesDeath())
                     gameOver();
-
+                handleHeadPoses();
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.W) || Raylib.IsKeyPressed(KeyboardKey.Up))
             {
@@ -248,9 +249,9 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveUp();
                 eatCherry(gameField);
-                if (checkIfColliding())
+                if (checkIfColliding() || headPoses.getWrongPosesDeath())
                     gameOver();
-
+                handleHeadPoses();
 
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.S) || Raylib.IsKeyPressed(KeyboardKey.Down))
@@ -259,15 +260,17 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveDown();
                 eatCherry(gameField);
-                if (checkIfColliding())
+                if (checkIfColliding() || headPoses.getWrongPosesDeath())
                     gameOver();
+                handleHeadPoses();
 
             }
             else
             {
                 sittingStill = true;
-            }
                 handleHeadPoses();
+            }
+                
             
         }
         private void handleHeadPoses()
@@ -290,6 +293,9 @@ namespace raylibShenanigans
 
         public void reset()
         {
+            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+
             playerVars.X = 700;
             playerVars.Y = 500;
             playerVars.Width = 50;

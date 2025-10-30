@@ -9,7 +9,10 @@ namespace raylibShenanigans
 {
     internal class GameField
     {
-        private Image cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
+        // For school PC 
+        //private Image cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
+        // My PC
+        private Image cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
         private Texture2D cherryTexture;
 
         // Vars for the sprite a 50x50 square

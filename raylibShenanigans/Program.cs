@@ -10,8 +10,8 @@ class Program
         Raylib.SetTargetFPS(60);
 
 
-        Player player = new Player(700, 550);
-        GameField gameField = new GameField(100,400);
+        Player player = new(700, 550);
+        GameField gameField = new(100,400);
 
 
         while (!Raylib.WindowShouldClose())
@@ -20,11 +20,11 @@ class Program
             Raylib.ClearBackground(Color.White);
 
             if (player.getStatus()){
+                player.handleMovement(gameField);
+
                 player.drawScore();
                 player.drawPlayer();
                 gameField.drawCherries();
-
-                player.handleMovement(gameField);
             }else
                 player.gameOver();
            

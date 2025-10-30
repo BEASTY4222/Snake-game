@@ -9,36 +9,45 @@ using System.Threading.Tasks;
 
 namespace raylibShenanigans
 {
-    internal class Set 
+    internal class Set
     {
         private const int SAME_NUMBER_MAX = 2;
         private List<Pair<Vector2,int>> container;
+        private bool wrongPosesDeath;
 
         public Set(){
-            container = new List<Pair<Vector2, int>>(10) { new Pair<Vector2,int>(new Vector2(700,500),1) };        
+            container = new List<Pair<Vector2, int>>(10) { new Pair<Vector2,int>(new Vector2(700,500),1) };
+            wrongPosesDeath = false;
         }
 
         public void add(Vector2 elem)
         {
             for (int i = 0; i < container.Capacity;i++)
             {
-                if (container[i].First == elem && container[i].Second == SAME_NUMBER_MAX)
+                try
                 {
-                    return;
+                    if (container[i].First == elem && container[i].Second == SAME_NUMBER_MAX)
+                    {
+                        return;
+                    }
+                    else if (container[i].First == elem && container[i].Second != SAME_NUMBER_MAX)
+                    {
+                        container[i].Second++;
+                    }
+                    else
+                    {
+                        container.Add(new Pair<Vector2, int>(new Vector2(elem.X, elem.Y), 1));
+                        return;
+                    }
                 }
-                else if (container[i].First == elem && container[i].Second != SAME_NUMBER_MAX)
+                catch (System.ArgumentOutOfRangeException)
                 {
-                    container[i].Second++;
-                }
-                else
-                {
-                    container.Add(new Pair<Vector2, int>(new Vector2(elem.X, elem.Y), 1));
-                    return;
+                    wrongPosesDeath = true;
                 }
             }
         }
 
-        
+        public bool getWrongPosesDeath() { return wrongPosesDeath; }
         public void remove(Vector2 elem) { 
             int left = 0;
             int right = container.Count - 1;
@@ -60,7 +69,7 @@ namespace raylibShenanigans
             }
 
         }
-        public int count() { return container.Count(); }
+        public int count() { return container.Count; }
         public void removeAt(int index) { container.RemoveAt(index); }
 
         public Vector2 this[int index]
