@@ -26,7 +26,8 @@ namespace raylibShenanigans
             // For school PC 
             // Image cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
             // My PC
-            cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
+            //cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
+            cherry = Raylib.LoadImage("assets\\cherry.png");
 
             // Cherry vars
             CherryVars.X = PosX;
