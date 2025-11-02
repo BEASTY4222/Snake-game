@@ -19,26 +19,28 @@ namespace raylibShenanigans
     internal class Player
     {
         private const int MOVE_FOWARD = 50;
-        //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-        //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+        
 
         // Spirites and textures
         private Image playerSprite;
         private Image bodySprite;
         private Texture2D playerTexture;
         private Texture2D bodyTexture;
-        //malbetam po gsm
+
         // How long the body should be
         private List<int> body;
         private Set headPoses;
         private int posesIndex;
-        // For directions so we can rotate the sprite
+
+        // For directions so we can rotate the sprite and other sruff
         private bool facingLeft;
         private bool facingRight;
         private bool facingUp;
         private bool facingDown;
         private bool sittingStill;
         private bool alive;
+        private bool startedPlaying;
+        private string deathMessege;
 
         // Vars for the sprite a 50x50 square
         private Rectangle playerVars;
@@ -46,6 +48,10 @@ namespace raylibShenanigans
         public Player() { }
         public Player(int x, int y) {
             // Textures and sprites
+            // For school PC
+            //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+            //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+            // For my PC
             playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
             bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
 
@@ -60,6 +66,8 @@ namespace raylibShenanigans
             facingDown = false;
             sittingStill = true;
             alive = true;
+            startedPlaying = false;
+            deathMessege = "";
 
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
@@ -81,33 +89,49 @@ namespace raylibShenanigans
                     Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
             }
         }
-        // Score
-        public void drawScore()
-        {
-            Raylib.DrawText("SCORE: " + Convert.ToString(body.Count-1),630,40,35,Color.Black);
+        // Score and start text
+        public void drawScore(){
+            if (!startedPlaying){
+                Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
+                Raylib.DrawText("Move left to start", 520, 250, 40, Color.Black);
+                Raylib.DrawText("Rules:", 660, 290, 30, Color.Black);
+                Raylib.DrawText("1.Don't move in the opposite ", 550, 320, 25, Color.Black);
+                Raylib.DrawText("dirrection of your head", 565, 340, 25, Color.Black);
+                Raylib.DrawText("2.Don't ram into your body", 550, 360, 25, Color.Black);
+                Raylib.DrawText("3.Don't hit the walls",550,380,25,Color.Black);
+            }
+            else
+                Raylib.DrawText("SCORE: " + Convert.ToString(body.Count - 1), 630, 40, 35, Color.Black);
         }
         
         // Collision
-        private bool checkIfColliding()
+        private bool checkIfColliding(GameField gameField)
         {
             for (int i = 0; i < body.Count; i++)
-            {
-                if (body.Count > 5)
-                {
-                    for (int j = headPoses.count() - 1; j > body.Count - 1; j--){
-                        return Raylib.CheckCollisionRecs(playerVars,new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y,50,50));
-                        //Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                    }
-                }
+                if (body.Count > 4)
+                    for (int j = headPoses.count() - 1;0 < j ; j--)
+                        if(Raylib.CheckCollisionRecs(playerVars, new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y, 50, 50)))
+                            return true;
+            if (Raylib.CheckCollisionRecs(playerVars,gameField.getTopWall()) ||
+                Raylib.CheckCollisionRecs(playerVars,gameField.getBottomWall()) ||
+                Raylib.CheckCollisionRecs(playerVars,gameField.getLeftWall()) ||
+                Raylib.CheckCollisionRecs(playerVars,gameField.getRightWall())
+                ){
+                deathMessege = "You collided with a wall";
+                return true;
             }
+
             return false;
         }
         public void gameOver(){
             alive = false;
             Raylib.DrawText("YOU DIED", 580, 250, 50, Color.Black);
-            Raylib.DrawText("You collided with yourself", 520, 300, 30, Color.Black);
+            if(deathMessege == "")
+                Raylib.DrawText("You collided with yourself", 530, 300, 30, Color.Black);
+            else
+                Raylib.DrawText(deathMessege, 520, 300, 30, Color.Black);
 
-            Raylib.DrawRectangle(630,350,150,50,Color.Gray);
+            Raylib.DrawRectangle(630, 350, 150, 50, Color.Gray);
             Raylib.DrawText("Restart",655,365, 25,Color.Black);
 
             if (Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(),new Rectangle( 630,350,150,50 ))){
@@ -132,8 +156,10 @@ namespace raylibShenanigans
 
         // Movement 
         public void moveLeft(){
-            if (body.Count > 0 && facingRight)
+            if (body.Count > 1 && facingRight){
+                alive = false;
                 return;
+            }
             playerVars.X -= MOVE_FOWARD;
             if (facingRight == true)
             {
@@ -156,8 +182,10 @@ namespace raylibShenanigans
         }
         public void moveRight()
         {
-            if (body.Count > 0 && facingLeft)
+            if (body.Count > 1 && facingLeft){
+                alive = false;
                 return;
+            }
             playerVars.X += MOVE_FOWARD;
             if (facingLeft == true)
             {
@@ -178,8 +206,10 @@ namespace raylibShenanigans
         }
         public void moveUp()
         {
-            if (body.Count > 0 && facingDown)
+            if (body.Count > 1 && facingDown){
+                alive = false;
                 return;
+            }
             playerVars.Y -= MOVE_FOWARD;
             if (facingDown == true)
             {
@@ -201,8 +231,10 @@ namespace raylibShenanigans
         }
         public void moveDown()
         {
-            if (body.Count > 0 && facingUp)
+            if (body.Count > 1 && facingUp){
+                alive = false;
                 return;
+            }
             playerVars.Y += MOVE_FOWARD;
             if (facingUp == true)
             {
@@ -228,10 +260,11 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveLeft();
                 eatCherry(gameField);
-                if (checkIfColliding() || headPoses.getWrongPosesDeath())
+                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
                     gameOver();
                 handleHeadPoses();
-                
+                startedPlaying = true;
+
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.D) || Raylib.IsKeyPressed(KeyboardKey.Right))
             {
@@ -239,9 +272,10 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveRight();
                 eatCherry(gameField);
-                if (checkIfColliding() || headPoses.getWrongPosesDeath())
+                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
                     gameOver();
                 handleHeadPoses();
+                startedPlaying = true;
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.W) || Raylib.IsKeyPressed(KeyboardKey.Up))
             {
@@ -249,10 +283,10 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveUp();
                 eatCherry(gameField);
-                if (checkIfColliding() || headPoses.getWrongPosesDeath())
+                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
                     gameOver();
                 handleHeadPoses();
-
+                startedPlaying = true;
             }
             else if (Raylib.IsKeyPressed(KeyboardKey.S) || Raylib.IsKeyPressed(KeyboardKey.Down))
             {
@@ -260,10 +294,10 @@ namespace raylibShenanigans
                 sittingStill = false;
                 moveDown();
                 eatCherry(gameField);
-                if (checkIfColliding() || headPoses.getWrongPosesDeath())
+                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
                     gameOver();
                 handleHeadPoses();
-
+                startedPlaying = true;
             }
             else
             {
@@ -301,12 +335,13 @@ namespace raylibShenanigans
             playerVars.Width = 50;
             playerVars.Height = 50;
 
-            facingLeft = true;
+            facingLeft = false;
             facingRight = false;
             facingUp = false;
             facingDown = false;
             sittingStill = true;
             alive = true;
+            startedPlaying = false;
 
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);

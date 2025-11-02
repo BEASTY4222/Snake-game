@@ -9,29 +9,62 @@ namespace raylibShenanigans
 {
     internal class GameField
     {
-        // For school PC 
-        //private Image cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
-        // My PC
-        private Image cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
         private Texture2D cherryTexture;
+        private Image cherry;
 
         // Vars for the sprite a 50x50 square
         private Rectangle CherryVars;
 
-        public GameField(int PosX,int PosY)
-        {
+        // Vars for the walls
+        private Rectangle topWall;
+        private Rectangle bottomWall;
+        private Rectangle leftWall;
+        private Rectangle rightWall;
+
+        // Constructor
+        public GameField(int PosX,int PosY){
+            // For school PC 
+            // Image cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
+            // My PC
+            cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
+
+            // Cherry vars
             CherryVars.X = PosX;
             CherryVars.Y = PosY;
             CherryVars.Width = 50;
             CherryVars.Height = 50;
+
+            // Wall vars
+            topWall = new Rectangle(0, 0, 1400, 20);
+            bottomWall = new Rectangle(0, 680, 1400, 20);
+            leftWall = new Rectangle(0, 0, 20, 700);
+            rightWall = new Rectangle(1380, 00, 20, 700);
+        }
+
+        // Walls
+        public void drawWalls(){
+            // Top wall
+            Raylib.DrawRectangleRec(topWall, Color.Black);
+            // Bottom wall
+            Raylib.DrawRectangleRec(bottomWall, Color.Black);
+            // Left wall
+            Raylib.DrawRectangleRec(leftWall, Color.Black);
+            // Right wall
+            Raylib.DrawRectangleRec(rightWall, Color.Black);
         }
 
         // Getters
-        public int getCherryWidth() {  return (int)CherryVars.Width; }
-        public int getCherryHeight() {  return (int)CherryVars.Height; }
-        public int getCherryPosX() { return (int)CherryVars.X; }
-        public int getCherryPosY() { return (int)CherryVars.Y; }
+        public Rectangle getTopWall(){ return topWall; }
+        public Rectangle getBottomWall(){ return bottomWall; }
+        public Rectangle getLeftWall() {  return leftWall; }
+        public Rectangle getRightWall() {  return rightWall; }
+
+        // Cherry stuff down from here
+
+        // Getters
         public Rectangle getCherryVars() { return CherryVars; }
+
+        // Draw the cherry
         public void drawCherries()
         {
             Raylib.UnloadTexture(cherryTexture);
@@ -39,10 +72,11 @@ namespace raylibShenanigans
             Raylib.DrawTexture(cherryTexture, (int)CherryVars.X, (int)CherryVars.Y, Color.White);
         }
 
+        // Generate a cherry
         public void makeNew()
         {
-            int randomPosX = Raylib.GetRandomValue(10, 1300);
-            int randomPosY = Raylib.GetRandomValue(10, 600);
+            int randomPosX = Raylib.GetRandomValue(20, 1300);
+            int randomPosY = Raylib.GetRandomValue(20, 600);
 
             CherryVars.X = randomPosX;
             CherryVars.Y = randomPosY;
