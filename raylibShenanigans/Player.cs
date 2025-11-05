@@ -84,25 +84,12 @@ namespace raylibShenanigans
             
             bodyTexture = Raylib.LoadTextureFromImage(bodySprite);
             playerTexture = Raylib.LoadTextureFromImage(playerSprite);
-            if (body.Count <= 8)
+            for (int j = headPoses.count() - 1, h = 0; j > body.Count-1; j--, h++)
             {
-                for (int j = headPoses.count() - 1, h = 0; j > 0; j--, h++)
-                {
-                    if (h == 0)
-                        Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                    else
-                        Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                }
-            }
-            else
-            {
-                for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++)
-                {
-                    if (h == 0)
-                        Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                    else
-                        Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                }
+                if (h == 0)
+                    Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                else
+                    Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
             }
         }
         // Score and start text
@@ -127,8 +114,8 @@ namespace raylibShenanigans
         private bool checkIfColliding(GameField gameField)
         {
             for (int i = 0; i < body.Count; i++)
-                if (body.Count > 4)
-                    for (int j = headPoses.count() - 1;0 < j ; j--)
+                if(body.Count >= 4)
+                    for (int j = headPoses.count() - 1; j >= body.Count(); j--)
                         if(Raylib.CheckCollisionRecs(playerVars, new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y, 50, 50)))
                             return true;
             if (Raylib.CheckCollisionRecs(playerVars,gameField.getTopWall()) ||
@@ -174,7 +161,7 @@ namespace raylibShenanigans
             if (Raylib.CheckCollisionRecs(this.playerVars,gameField.getCherryVars()))
             {
                 body.Add(1);
-                gameField.makeNew();
+                gameField.makeNew(headPoses);
             }
         }
 
@@ -338,17 +325,10 @@ namespace raylibShenanigans
                 headPoses.add(new Vector2(playerVars.X, playerVars.Y));
                 for (int i = 0; i < body.Count; i++)
                 {
-                    if(body.Count <= 8)
+                    if (headPoses.count() > body.Count * 2)
                     {
-                        if (headPoses.count() > body.Count * 2)
-                        {
-                            headPoses.removeAt(0);
-                        }
-                    }else
-                        if (headPoses.count() > body.Count+1)
-                        {
-                            headPoses.removeAt(0);
-                        }
+                        headPoses.removeAt(0);
+                    }
                 }
             }
         }

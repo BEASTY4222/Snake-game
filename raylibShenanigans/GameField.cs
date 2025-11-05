@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Raylib_cs;
@@ -75,10 +76,21 @@ namespace raylibShenanigans
         }
 
         // Generate a cherry
-        public void makeNew()
+        public void makeNew(Set container)
         {
             int randomPosX = Raylib.GetRandomValue(20, 1300);
             int randomPosY = Raylib.GetRandomValue(20, 600);
+
+
+            Vector2 cherryPos = new Vector2(randomPosX, randomPosY);
+            for (int i = 0;i < container.count();i++)
+            {
+                // FIX CHERY SPAWN ON BODY
+            }
+
+
+
+
 
             CherryVars.X = randomPosX;
             CherryVars.Y = randomPosY;
