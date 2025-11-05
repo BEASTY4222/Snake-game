@@ -49,14 +49,16 @@ namespace raylibShenanigans
         public Player(int x, int y) {
             // Textures and sprites
             // For school PC
-            //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-            //Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+            playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
             // For my PC
             //playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
             //bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
-            playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
+            // For .exe
+            //playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
+            //bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
 
+            
             playerVars.X = x;
             playerVars.Y = y;
             playerVars.Width = 50;
@@ -82,19 +84,34 @@ namespace raylibShenanigans
             
             bodyTexture = Raylib.LoadTextureFromImage(bodySprite);
             playerTexture = Raylib.LoadTextureFromImage(playerSprite);
-
-            for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++)
+            if (body.Count <= 8)
             {
-                if (h == 0)
-                    Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
-                else
-                    Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                for (int j = headPoses.count() - 1, h = 0; j > 0; j--, h++)
+                {
+                    if (h == 0)
+                        Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                    else
+                        Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                }
+            }
+            else
+            {
+                for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++)
+                {
+                    if (h == 0)
+                        Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                    else
+                        Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                }
             }
         }
         // Score and start text
         public void drawScore(){
             if (!startedPlaying){
+                Raylib.DrawRectangleLines(25,365,245,30,Color.Black);
                 Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
+
+                Raylib.DrawRectangleLines(500, 230, 425, 200, Color.Black);
                 Raylib.DrawText("Move left to start", 520, 250, 40, Color.Black);
                 Raylib.DrawText("Rules:", 660, 290, 30, Color.Black);
                 Raylib.DrawText("1.Don't move in the opposite ", 550, 320, 25, Color.Black);
@@ -135,11 +152,16 @@ namespace raylibShenanigans
 
             Raylib.DrawRectangle(630, 350, 150, 50, Color.Gray);
             Raylib.DrawText("Restart",655,365, 25,Color.Black);
+            Raylib.DrawText("(or press R)", 663, 385, 13, Color.Black);
+
+            if (Raylib.IsKeyPressed(KeyboardKey.R))
+                reset();
 
             if (Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(),new Rectangle( 630,350,150,50 ))){
                 Raylib.DrawRectangle(630, 350, 150, 50, Color.Green);
                 Raylib.DrawText("Restart", 655, 365, 25, Color.Black);
-                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+                Raylib.DrawText("(or press R)", 663, 385, 13, Color.Black);
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left) || Raylib.IsKeyPressed(KeyboardKey.R))
                     reset();
                 
             }
@@ -316,9 +338,17 @@ namespace raylibShenanigans
                 headPoses.add(new Vector2(playerVars.X, playerVars.Y));
                 for (int i = 0; i < body.Count; i++)
                 {
-                    if (headPoses.count() > body.Count * 2){
-                        headPoses.removeAt(0);
-                    }
+                    if(body.Count <= 8)
+                    {
+                        if (headPoses.count() > body.Count * 2)
+                        {
+                            headPoses.removeAt(0);
+                        }
+                    }else
+                        if (headPoses.count() > body.Count+1)
+                        {
+                            headPoses.removeAt(0);
+                        }
                 }
             }
         }
@@ -329,8 +359,14 @@ namespace raylibShenanigans
 
         public void reset()
         {
-            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+            // So we are facing the right way at the start
+            if (facingRight == true)
+                Raylib.ImageFlipHorizontal(ref playerSprite);
+            else if (facingUp == true)
+                Raylib.ImageRotateCCW(ref playerSprite);
+            else if (facingDown == true)
+                Raylib.ImageRotateCW(ref playerSprite);
+
 
             playerVars.X = 700;
             playerVars.Y = 500;
@@ -344,6 +380,7 @@ namespace raylibShenanigans
             sittingStill = true;
             alive = true;
             startedPlaying = false;
+            deathMessege = "";
 
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
