@@ -78,19 +78,33 @@ namespace raylibShenanigans
         // Generate a cherry
         public void makeNew(Set container)
         {
-            int randomPosX = Raylib.GetRandomValue(20, 1300);
-            int randomPosY = Raylib.GetRandomValue(20, 600);
-
-
-            Vector2 cherryPos = new Vector2(randomPosX, randomPosY);
-            for (int i = 0;i < container.count();i++)
+            int randomPosX = 0;
+            int randomPosY = 0;
+            bool made = false;
+            while (!made)
             {
-                // FIX CHERY SPAWN ON BODY
+                randomPosX = Raylib.GetRandomValue(2, 13);
+                randomPosY = Raylib.GetRandomValue(2, 6);
+
+                List<int> Multipliers = new List<int>() { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+
+                int randomXMultiplier = Raylib.GetRandomValue(0, 9);
+                randomPosX *= Multipliers[randomXMultiplier];
+
+                int randomYMultiplier = Raylib.GetRandomValue(0, 9);
+                randomPosY *= Multipliers[randomYMultiplier];
+
+                for (int i = 0; i < container.count(); i++)
+                {
+                    if (container[i].X == randomPosX && container[i].Y == randomPosY)
+                    {
+                        break;
+                    }
+                }
+
+                made = true;
             }
-
-
-
-
+            
 
             CherryVars.X = randomPosX;
             CherryVars.Y = randomPosY;

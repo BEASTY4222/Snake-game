@@ -30,7 +30,6 @@ namespace raylibShenanigans
         // How long the body should be
         private List<int> body;
         private Set headPoses;
-        private int posesIndex;
 
         // For directions so we can rotate the sprite and other sruff
         private bool facingLeft;
@@ -41,6 +40,7 @@ namespace raylibShenanigans
         private bool alive;
         private bool startedPlaying;
         private string deathMessege;
+        private string movementMode;
 
         // Vars for the sprite a 50x50 square
         private Rectangle playerVars;
@@ -72,11 +72,11 @@ namespace raylibShenanigans
             alive = true;
             startedPlaying = false;
             deathMessege = "";
+            movementMode = "manual";
 
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
             headPoses = new Set();
-            posesIndex = 0;
         }
         public void drawPlayer(){
             Raylib.UnloadTexture(bodyTexture);
@@ -98,13 +98,28 @@ namespace raylibShenanigans
                 Raylib.DrawRectangleLines(25,365,245,30,Color.Black);
                 Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
 
-                Raylib.DrawRectangleLines(500, 230, 425, 200, Color.Black);
+                Raylib.DrawRectangleLines(500, 230, 425, 250, Color.Black);
                 Raylib.DrawText("Move left to start", 520, 250, 40, Color.Black);
                 Raylib.DrawText("Rules:", 660, 290, 30, Color.Black);
                 Raylib.DrawText("1.Don't move in the opposite ", 550, 320, 25, Color.Black);
                 Raylib.DrawText("dirrection of your head", 565, 340, 25, Color.Black);
                 Raylib.DrawText("2.Don't ram into your body", 550, 360, 25, Color.Black);
                 Raylib.DrawText("3.Don't hit the walls",550,380,25,Color.Black);
+                Raylib.DrawText("Press f to switch from", 550, 400, 25, Color.Black);
+                Raylib.DrawText("manual to automatic movement", 550, 420, 25, Color.Black);
+                Raylib.DrawText("current mode - " + movementMode, 550, 440, 25, Color.Black);
+
+                if (Raylib.IsKeyPressed(KeyboardKey.F))
+                {
+                    if (movementMode == "manual")
+                    {
+                        movementMode = "automatic";
+                    }
+                    else
+                    {
+                        movementMode = "manual";
+                    }
+                }
             }
             else
                 Raylib.DrawText("SCORE: " + Convert.ToString(body.Count - 1), 630, 40, 35, Color.Black);
@@ -166,153 +181,224 @@ namespace raylibShenanigans
         }
 
         // Movement 
-        public void moveLeft(){
-            if (body.Count > 1 && facingRight){
-                alive = false;
-                return;
-            }
-            playerVars.X -= MOVE_FOWARD;
-            if (facingRight == true)
-            {
-                    Raylib.ImageFlipHorizontal(ref playerSprite);
-            }
-            else if (facingUp == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            else if (facingDown == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            facingLeft = true;
+        public void moveLeft(bool manual){
+            if(manual){
+                if (body.Count > 1 && facingRight){
+                    alive = false;
+                    return;
+                }
+                playerVars.X -= MOVE_FOWARD;
+                if (facingRight == true)
+                {
+                        Raylib.ImageFlipHorizontal(ref playerSprite);
+                }
+                else if (facingUp == true)
+                {
+                    Raylib.ImageRotateCCW(ref playerSprite);
+                }
+                else if (facingDown == true)
+                {
+                    Raylib.ImageRotateCW(ref playerSprite);
+                }
+                facingLeft = true;
 
-            facingRight = false;
-            facingUp = false;
-            facingDown = false;
-
-        }
-        public void moveRight()
-        {
-            if (body.Count > 1 && facingLeft){
-                alive = false;
-                return;
-            }
-            playerVars.X += MOVE_FOWARD;
-            if (facingLeft == true)
-            {
-                Raylib.ImageFlipHorizontal(ref playerSprite);
-            }else if (facingUp == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            else if (facingDown == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            facingRight = true;
-
-            facingLeft = false;
-            facingUp = false;
-            facingDown = false;
-        }
-        public void moveUp()
-        {
-            if (body.Count > 1 && facingDown){
-                alive = false;
-                return;
-            }
-            playerVars.Y -= MOVE_FOWARD;
-            if (facingDown == true)
-            {
-                Raylib.ImageFlipVertical(ref playerSprite);
-            }
-            else if (facingRight == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            else if (facingLeft == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            facingUp = true;
-
-            facingLeft = false;
-            facingRight = false;
-            facingDown = false;
-        }
-        public void moveDown()
-        {
-            if (body.Count > 1 && facingUp){
-                alive = false;
-                return;
-            }
-            playerVars.Y += MOVE_FOWARD;
-            if (facingUp == true)
-            {
-                Raylib.ImageFlipVertical(ref playerSprite);
-            }
-            else if (facingRight == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            else if (facingLeft == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            facingDown = true;
-
-            facingLeft = false;
-            facingRight = false;
-            facingUp = false;
-        }
-        public void handleMovement(GameField gameField)
-        {
-            if (Raylib.IsKeyPressed(KeyboardKey.A) || Raylib.IsKeyPressed(KeyboardKey.Left)){
-                sittingStill = false;
-                moveLeft();
-                eatCherry(gameField);
-                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
-                    gameOver();
-                handleHeadPoses();
-                startedPlaying = true;
-
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.D) || Raylib.IsKeyPressed(KeyboardKey.Right))
-            {
-                
-                sittingStill = false;
-                moveRight();
-                eatCherry(gameField);
-                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
-                    gameOver();
-                handleHeadPoses();
-                startedPlaying = true;
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.W) || Raylib.IsKeyPressed(KeyboardKey.Up))
-            {
-                
-                sittingStill = false;
-                moveUp();
-                eatCherry(gameField);
-                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
-                    gameOver();
-                handleHeadPoses();
-                startedPlaying = true;
-            }
-            else if (Raylib.IsKeyPressed(KeyboardKey.S) || Raylib.IsKeyPressed(KeyboardKey.Down))
-            {
-                
-                sittingStill = false;
-                moveDown();
-                eatCherry(gameField);
-                if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
-                    gameOver();
-                handleHeadPoses();
-                startedPlaying = true;
+                facingRight = false;
+                facingUp = false;
+                facingDown = false;
             }
             else
             {
-                sittingStill = true;
+                if (body.Count > 1 && facingRight)
+                {
+                    alive = false;
+                    return;
+                }
+                playerVars.X -= MOVE_FOWARD;
+                if (facingRight == true)
+                {
+                    Raylib.ImageFlipHorizontal(ref playerSprite);
+                }
+                else if (facingUp == true)
+                {
+                    Raylib.ImageRotateCCW(ref playerSprite);
+                }
+                else if (facingDown == true)
+                {
+                    Raylib.ImageRotateCW(ref playerSprite);
+                }
+                facingLeft = true;
+
+                facingRight = false;
+                facingUp = false;
+                facingDown = false;
+            }
+        }
+        public void moveRight(bool manual)
+        {
+            if(manual){
+                if (body.Count > 1 && facingLeft){
+                    alive = false;
+                    return;
+                }
+                playerVars.X += MOVE_FOWARD;
+                if (facingLeft == true)
+                {
+                    Raylib.ImageFlipHorizontal(ref playerSprite);
+                }else if (facingUp == true)
+                {
+                    Raylib.ImageRotateCW(ref playerSprite);
+                }
+                else if (facingDown == true)
+                {
+                    Raylib.ImageRotateCCW(ref playerSprite);
+                }
+                facingRight = true;
+
+                facingLeft = false;
+                facingUp = false;
+                facingDown = false;
+            }
+        }
+        public void moveUp(bool manual)
+        {
+            if (manual){ 
+                if (body.Count > 1 && facingDown){
+                    alive = false;
+                    return;
+                }
+                playerVars.Y -= MOVE_FOWARD;
+                if (facingDown == true)
+                {
+                    Raylib.ImageFlipVertical(ref playerSprite);
+                }
+                else if (facingRight == true)
+                {
+                    Raylib.ImageRotateCCW(ref playerSprite);
+                }
+                else if (facingLeft == true)
+                {
+                    Raylib.ImageRotateCW(ref playerSprite);
+                }
+                facingUp = true;
+
+                facingLeft = false;
+                facingRight = false;
+                    facingDown = false;
+            }
+        }
+        public void moveDown(bool manual)
+        {
+            if(manual){
+                if (body.Count > 1 && facingUp){
+                    alive = false;
+                    return;
+                }
+                playerVars.Y += MOVE_FOWARD;
+                if (facingUp == true)
+                {
+                    Raylib.ImageFlipVertical(ref playerSprite);
+                }
+                else if (facingRight == true)
+                {
+                    Raylib.ImageRotateCW(ref playerSprite);
+                }
+                else if (facingLeft == true)
+                {
+                    Raylib.ImageRotateCCW(ref playerSprite);
+                }
+                facingDown = true;
+
+                facingLeft = false;
+                facingRight = false;
+                facingUp = false;
+            }
+        }
+        public void handleMovement(GameField gameField)
+        {
+            if(movementMode == "manual"){
+                if (Raylib.IsKeyPressed(KeyboardKey.A) || Raylib.IsKeyPressed(KeyboardKey.Left))
+                {
+                    sittingStill = false;
+                    moveLeft(true);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                    handleHeadPoses();
+                    startedPlaying = true;
+
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.D) || Raylib.IsKeyPressed(KeyboardKey.Right))
+                {
+
+                    sittingStill = false;
+                    moveRight(true);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                    handleHeadPoses();
+                    startedPlaying = true;
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.W) || Raylib.IsKeyPressed(KeyboardKey.Up))
+                {
+
+                    sittingStill = false;
+                    moveUp(true);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                    handleHeadPoses();
+                    startedPlaying = true;
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.S) || Raylib.IsKeyPressed(KeyboardKey.Down))
+                {
+
+                    sittingStill = false;
+                    moveDown(true);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                    handleHeadPoses();
+                    startedPlaying = true;
+                }
+                else
+                {
+                    sittingStill = true;
+                    handleHeadPoses();
+                }
+            }
+            else if (movementMode == "automatic")
+            {
+                playerVars.X += MOVE_FOWARD * Raylib.GetFrameTime();
+                startedPlaying = true;
+                sittingStill = false;
+                if (Raylib.IsKeyPressed(KeyboardKey.A) || Raylib.IsKeyPressed(KeyboardKey.Left))
+                {
+                    moveLeft(false);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.D) || Raylib.IsKeyPressed(KeyboardKey.Right))
+                {
+                    moveRight(false);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.W) || Raylib.IsKeyPressed(KeyboardKey.Up))
+                {
+                    moveUp(false);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                }
+                else if (Raylib.IsKeyPressed(KeyboardKey.S) || Raylib.IsKeyPressed(KeyboardKey.Down))
+                {
+                    moveDown(false);
+                    eatCherry(gameField);
+                    if (checkIfColliding(gameField) || headPoses.getWrongPosesDeath())
+                        gameOver();
+                }
                 handleHeadPoses();
             }
                 
@@ -365,7 +451,6 @@ namespace raylibShenanigans
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
             headPoses = new Set();
-            posesIndex = 0;
         }
     }
 }
