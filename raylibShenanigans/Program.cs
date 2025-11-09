@@ -24,7 +24,7 @@ class Program
 
                 player.drawScore();
                 player.drawPlayer();
-                gameField.drawCherries();
+                gameField.drawApples();
                 gameField.drawWalls();
             }else
                 player.gameOver();

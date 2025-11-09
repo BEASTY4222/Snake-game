@@ -10,11 +10,11 @@ namespace raylibShenanigans
 {
     internal class GameField
     {
-        private Texture2D cherryTexture;
-        private Image cherry;
+        private Texture2D appleTexture;
+        private Image apple;
 
         // Vars for the sprite a 50x50 square
-        private Rectangle CherryVars;
+        private Rectangle appleVars;
 
         // Vars for the walls
         private Rectangle topWall;
@@ -25,17 +25,17 @@ namespace raylibShenanigans
         // Constructor
         public GameField(int PosX,int PosY){
             // For school PC 
-            cherry = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\cherry.png");
+            //apple = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\apple.png");
             // My PC
-            //cherry = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\cherry.png");
+            apple = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\apple.png");
             // For .exe
-            //cherry = Raylib.LoadImage("assets\\cherry.png");
+            //apple = Raylib.LoadImage("assets\\apple.png");
 
-            // Cherry vars
-            CherryVars.X = PosX;
-            CherryVars.Y = PosY;
-            CherryVars.Width = 50;
-            CherryVars.Height = 50;
+            // apple vars
+            appleVars.X = PosX;
+            appleVars.Y = PosY;
+            appleVars.Width = 50;
+            appleVars.Height = 50;
 
             // Wall vars
             topWall = new Rectangle(0, 0, 1400, 20);
@@ -65,14 +65,14 @@ namespace raylibShenanigans
         // Cherry stuff down from here
 
         // Getters
-        public Rectangle getCherryVars() { return CherryVars; }
+        public Rectangle getAppleVars() { return appleVars; }
 
         // Draw the cherry
-        public void drawCherries()
+        public void drawApples()
         {
-            Raylib.UnloadTexture(cherryTexture);
-            cherryTexture = Raylib.LoadTextureFromImage(cherry);
-            Raylib.DrawTexture(cherryTexture, (int)CherryVars.X, (int)CherryVars.Y, Color.White);
+            Raylib.UnloadTexture(appleTexture);
+            appleTexture = Raylib.LoadTextureFromImage(apple);
+            Raylib.DrawTexture(appleTexture, (int)appleVars.X, (int)appleVars.Y, Color.White);
         }
 
         // Generate a cherry
@@ -104,12 +104,12 @@ namespace raylibShenanigans
 
                 made = true;
             }
-            
 
-            CherryVars.X = randomPosX;
-            CherryVars.Y = randomPosY;
-            CherryVars.Width = 50;
-            CherryVars.Height = 50;
+
+            appleVars.X = randomPosX;
+            appleVars.Y = randomPosY;
+            appleVars.Width = 50;
+            appleVars.Height = 50;
         }
         
     }
