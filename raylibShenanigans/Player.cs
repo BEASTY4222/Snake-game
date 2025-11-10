@@ -51,11 +51,11 @@ namespace raylibShenanigans
             // Textures and sprites
 
             // For school PC
-            //playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-            //bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+            playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
             // For my PC
-            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+            //playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
+            //bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
             // For .exe
             //playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
             //bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
@@ -98,9 +98,9 @@ namespace raylibShenanigans
             }
             else
             {
-                for (int j = 0, h = headPoses.count() - 1; j < body.Count; j++)
+                for (int j = 0, h = headPoses.count() - 1; h > body.Count - 1; j++, h--)
                 {
-                    if (h == headPoses.count() - 1 && j == headPoses.count()-1)
+                    if (j == headPoses.count() - 1)
                         Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
                     else
                         Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
@@ -492,26 +492,54 @@ namespace raylibShenanigans
         {
             if (!sittingStill)
             {
-                if (movementMode == "manual")
+                if (movementMode == "manual"){
                     headPoses.add(new Vector2(playerVars.X, playerVars.Y));
-                else
-                {
-                    if (facingLeft && headPoses[headPoses.count() - 1].X - 50 > playerVars.X){
-                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
-                    }else if (facingRight && headPoses[headPoses.count() - 1].X + 50 < playerVars.X){
-                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
-                    }else if(facingUp && headPoses[headPoses.count() - 1].Y - 50 > playerVars.Y)
-                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
-                    else if(facingDown && headPoses[headPoses.count() - 1].Y + 50 < playerVars.Y)
-                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
-                }
-                for (int i = 0; i < body.Count; i++)
-                {
-                    if (headPoses.count() > body.Count * 2)
+                    for (int i = 0; i < body.Count; i++)
                     {
-                        headPoses.removeAt(0);
+                        if (headPoses.count() > body.Count * 2)
+                        {
+                            headPoses.removeAt(0);
+                        }
                     }
                 }
+                else
+                {
+                    if ((facingLeft && headPoses[headPoses.count() - 1].X - 45 > playerVars.X) 
+                        || (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.W) 
+                        || Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.S) 
+                        || Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.Right) 
+                        || Raylib.IsKeyDown(KeyboardKey.Down) || Raylib.IsKeyDown(KeyboardKey.Up))){
+                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
+                    }else if ((facingRight && headPoses[headPoses.count() - 1].X + 45 < playerVars.X) 
+                        || (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.W)
+                        || Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.S)
+                        || Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.Right)
+                        || Raylib.IsKeyDown(KeyboardKey.Down) || Raylib.IsKeyDown(KeyboardKey.Up))){
+                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
+                    }else if((facingUp && headPoses[headPoses.count() - 1].Y - 45 > playerVars.Y) 
+                        || (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.W)
+                        || Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.S)
+                        || Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.Right)
+                        || Raylib.IsKeyDown(KeyboardKey.Down) || Raylib.IsKeyDown(KeyboardKey.Up))){
+                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
+                    }
+                    else if((facingDown && headPoses[headPoses.count() - 1].Y + 45 < playerVars.Y) 
+                        || (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.W)
+                        || Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.S)
+                        || Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.Right)
+                        || Raylib.IsKeyDown(KeyboardKey.Down) || Raylib.IsKeyDown(KeyboardKey.Up))){
+                        headPoses.add(new Vector2(playerVars.X, playerVars.Y));
+                    }
+                    for (int i = 0; i < body.Count; i++)
+                    {
+                        if (headPoses.count() > body.Count * 2)
+                        {
+                            headPoses.removeAt(headPoses.count() - 1);
+                        }
+                    }
+
+                }
+                
             }
         }
 
