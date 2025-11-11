@@ -47,6 +47,11 @@ namespace raylibShenanigans
             }
         }
 
+        public void addAt(Vector2 elem, int index)
+        {
+            container[index] = new Pair<Vector2, int>(elem, 1);
+        }
+
         public bool getWrongPosesDeath() { return wrongPosesDeath; }
         public void remove(Vector2 elem) { 
             int left = 0;
