@@ -31,6 +31,7 @@ namespace raylibShenanigans
         // How long the body should be
         private List<int> body;
         private Set headPoses;
+        private List<Vector2> autoPosses;
 
         // For directions so we can rotate the sprite and other sruff
         private bool facingLeft;
@@ -76,6 +77,7 @@ namespace raylibShenanigans
             deathMessege = "";
             movementMode = "manual";
 
+            autoPosses = new List<Vector2>();
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
             headPoses = new Set();
@@ -98,12 +100,12 @@ namespace raylibShenanigans
             }
             else
             {
-                for (int j = 0, h = headPoses.count() - 1; h > body.Count - 1; j++, h--)
+                for (int j = 0, h = autoPosses.Count - 1; h > body.Count - 1; j++, h--)
                 {
-                    if (j == headPoses.count() - 1)
-                        Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                    if (j == 0)
+                        Raylib.DrawTexture(playerTexture, (int)autoPosses[h].X, (int)autoPosses[h].Y, Color.White);
                     else
-                        Raylib.DrawTexture(bodyTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
+                        Raylib.DrawTexture(bodyTexture, (int)autoPosses[h].X, (int)autoPosses[h].Y, Color.White);
                 }
             }
         }
@@ -145,9 +147,10 @@ namespace raylibShenanigans
         {
             for (int i = 0; i < body.Count; i++)
                 if(body.Count >= 4)
-                    for (int j = headPoses.count() - 1; j >= body.Count(); j--)
+                    for (int j = headPoses.count() - 1; j >= body.Count()+2; j--)
                         if(Raylib.CheckCollisionRecs(playerVars, new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y, 50, 50)))
                             return true;
+
             if (Raylib.CheckCollisionRecs(playerVars,gameField.getTopWall()) ||
                 Raylib.CheckCollisionRecs(playerVars,gameField.getBottomWall()) ||
                 Raylib.CheckCollisionRecs(playerVars,gameField.getLeftWall()) ||
@@ -530,11 +533,16 @@ namespace raylibShenanigans
                         || Raylib.IsKeyDown(KeyboardKey.Down) || Raylib.IsKeyDown(KeyboardKey.Up))){
                         headPoses.add(new Vector2(playerVars.X, playerVars.Y));
                     }
+
+                    autoPosses.Add(new Vector2(playerVars.X, playerVars.Y));    
+
                     for (int i = 0; i < body.Count; i++)
                     {
-                        if (headPoses.count() > body.Count * 2)
-                        {
+                        if (headPoses.count() > body.Count * 2){
                             headPoses.removeAt(headPoses.count() - 1);
+                        }
+                        if (autoPosses.Count >= body.Count * 10){
+                            autoPosses.RemoveAt(0);
                         }
                     }
 
@@ -573,6 +581,7 @@ namespace raylibShenanigans
             deathMessege = "";
             movementMode = "manual";
 
+            autoPosses = new List<Vector2>();
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
             headPoses = new Set();
