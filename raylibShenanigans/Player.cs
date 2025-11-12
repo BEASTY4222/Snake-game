@@ -104,10 +104,12 @@ namespace raylibShenanigans
             }
             else
             {
-                for (int j = 0, h = autoPosses.Count - 1; h > body.Count - 1; j++, h--)
+                for (int j = 0, h = autoPosses.Count - 1; h > body.Count; j++, h--)
                 {
-                    if (j == 0)
+                    if (j == autoPosses.Count - 1)
+                    {
                         Raylib.DrawTexture(playerTexture, (int)autoPosses[h].X, (int)autoPosses[h].Y, Color.White);
+                    }
                     else
                         Raylib.DrawTexture(bodyTexture, (int)autoPosses[h].X, (int)autoPosses[h].Y, Color.White);
                 }
@@ -202,7 +204,7 @@ namespace raylibShenanigans
             if (Raylib.CheckCollisionRecs(this.playerVars,gameField.getAppleVars())){
                 body.Add(1);
                 gameField.makeNew(headPoses);
-                if(body.Count - 1 > bestScore)
+                if(body.Count > bestScore)
                 {
                     bestScore = body.Count - 1;
                 }
@@ -602,7 +604,7 @@ namespace raylibShenanigans
 
         // Saving
         public void saveBestScore()
-        {   if(body.Count - 1 > bestScore)
+        {   if(body.Count > bestScore)
                 File.WriteAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt", Convert.ToString(body.Count - 1));
         }
 

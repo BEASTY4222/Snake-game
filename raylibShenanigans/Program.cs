@@ -26,8 +26,10 @@ class Program
                 player.drawPlayer();
                 gameField.drawApples();
                 gameField.drawWalls();
-            }else
+            }else{
                 player.gameOver();
+                player.saveBestScore();
+            }
            
             Raylib.EndDrawing();
         }
