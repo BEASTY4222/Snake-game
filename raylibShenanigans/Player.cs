@@ -71,10 +71,12 @@ namespace raylibShenanigans
             playerVars.Height = 50;
 
             load();
+
             facingLeft = true;
             facingRight = false;
             facingUp = false;
             facingDown = false;
+
             sittingStill = true;
             alive = true;
             startedPlaying = false;
@@ -94,8 +96,7 @@ namespace raylibShenanigans
             playerTexture = Raylib.LoadTextureFromImage(playerSprite);
             if(movementMode == "manual") 
             { 
-                for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++)
-                {
+                for (int j = headPoses.count() - 1, h = 0; j > body.Count - 1; j--, h++){
                     if (h == 0)
                         Raylib.DrawTexture(playerTexture, (int)headPoses[j].X, (int)headPoses[j].Y, Color.White);
                     else
@@ -104,9 +105,8 @@ namespace raylibShenanigans
             }
             else
             {
-                for (int j = 0, h = autoPosses.Count - 1; h > body.Count; j++, h--)
-                {
-                    if (j == autoPosses.Count - 1)
+                for (int j = 0, h = autoPosses.Count - 1; h > body.Count; j++, h--){
+                    if (j != autoPosses.Count - 1)
                     {
                         Raylib.DrawTexture(playerTexture, (int)autoPosses[h].X, (int)autoPosses[h].Y, Color.White);
                     }
@@ -571,14 +571,13 @@ namespace raylibShenanigans
 
         public void reset()
         {
-            // So we are facing the right way at the start
-            if (facingRight == true)
-                Raylib.ImageFlipHorizontal(ref playerSprite);
-            else if (facingUp == true)
-                Raylib.ImageRotateCCW(ref playerSprite);
-            else if (facingDown == true)
-                Raylib.ImageRotateCW(ref playerSprite);
+            // Fixing the sprite rotation
+            //resetHeadSprite();
 
+            facingLeft = false;
+            facingRight = false;
+            facingUp = false;
+            facingDown = false;
 
             playerVars.X = 700;
             playerVars.Y = 500;
@@ -586,10 +585,6 @@ namespace raylibShenanigans
             playerVars.Height = 50;
 
             load();
-            facingLeft = false;
-            facingRight = false;
-            facingUp = false;
-            facingDown = false;
             sittingStill = true;
             alive = true;
             startedPlaying = false;
@@ -600,6 +595,62 @@ namespace raylibShenanigans
             body = new List<int>();// 2 = head 1 = body
             body.Add(2);
             headPoses = new Set();
+        }
+        void resetHeadSprite()
+        {
+            // Fixing the sprite rotation
+            //for left
+            if (facingRight == true)
+            {
+                Raylib.ImageFlipHorizontal(ref playerSprite);
+            }
+            else if (facingUp == true)
+            {
+                Raylib.ImageRotateCCW(ref playerSprite);
+            }
+            else if (facingDown == true)
+            {
+                Raylib.ImageRotateCW(ref playerSprite);
+            }
+            //for right
+            if (facingLeft == true)
+            {
+                Raylib.ImageFlipHorizontal(ref playerSprite);
+            }
+            else if (facingUp == true)
+            {
+                Raylib.ImageRotateCW(ref playerSprite);
+            }
+            else if (facingDown == true)
+            {
+                Raylib.ImageRotateCCW(ref playerSprite);
+            }
+            //for up
+            if (facingDown == true)
+            {
+                Raylib.ImageFlipVertical(ref playerSprite);
+            }
+            else if (facingRight == true)
+            {
+                Raylib.ImageRotateCCW(ref playerSprite);
+            }
+            else if (facingLeft == true)
+            {
+                Raylib.ImageRotateCW(ref playerSprite);
+            }
+            //for down
+            if (facingUp == true)
+            {
+                Raylib.ImageFlipVertical(ref playerSprite);
+            }
+            else if (facingRight == true)
+            {
+                Raylib.ImageRotateCW(ref playerSprite);
+            }
+            else if (facingLeft == true)
+            {
+                Raylib.ImageRotateCCW(ref playerSprite);
+            }
         }
 
         // Saving

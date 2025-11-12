@@ -35,6 +35,5 @@ class Program
         }
 
         Raylib.CloseWindow();
-        player.saveBestScore();
     }
 }
