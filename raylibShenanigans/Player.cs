@@ -55,11 +55,11 @@ namespace raylibShenanigans
             // Textures and sprites
 
             // For school PC
-            playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+            //playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+            //bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
             // For my PC
-            //playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
-            //bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
             // For .exe
             //playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
             //bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
@@ -423,13 +423,9 @@ namespace raylibShenanigans
         }
         public void handleMovement(GameField gameField)
         {
-            if (Raylib.GetKeyPressed() != 0)
-            {
+            
 
-            }
-
-            if (startedPlaying)
-            {
+            
                 if (movementMode == "manual")
                 {
                     if (Raylib.IsKeyPressed(KeyboardKey.A) || Raylib.IsKeyPressed(KeyboardKey.Left))
@@ -506,7 +502,7 @@ namespace raylibShenanigans
                         gameOver();
                     handleHeadPoses();
                 }
-            }
+            
             
                 
             
@@ -667,7 +663,8 @@ namespace raylibShenanigans
 
         public void load()
         {
-            bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
+            //bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
+            bestScore = int.Parse(File.ReadAllText("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\data.txt"));
         }
     }
 }
