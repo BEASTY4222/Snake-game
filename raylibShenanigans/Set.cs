@@ -16,7 +16,7 @@ namespace raylibShenanigans
         private bool wrongPosesDeath;
 
         public Set(){
-            container = new List<Pair<Vector2, int>>(10) { new Pair<Vector2,int>(new Vector2(700,500),1) };
+            container = new List<Pair<Vector2, int>>(10) { new Pair<Vector2,int>(new Vector2(700,550),1) };
             wrongPosesDeath = false;
         }
 
