@@ -58,11 +58,11 @@ namespace raylibShenanigans
             // Textures and sprites
 
             // For school PC
-            playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
+            //playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
+            //bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
             // For my PC
-            //playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
-            //bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
+            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
             // For .exe
             //playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
             //bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
@@ -170,18 +170,15 @@ namespace raylibShenanigans
                                 return true;
             }
             else{
-                for (int i = 0; i < body.Count; i++)
-                    if (body.Count >= 4)
-                        for (int j = autoPosses.Count - 1; j >= body.Count() + 2; j--)
-                            if (Raylib.CheckCollisionRecs(playerVars, new Rectangle((int)headPoses[j].X, (int)headPoses[j].Y, 50, 50)))
+                for (int i = 0; i < body.Count; i++) {
+                    if (body.Count >= 4){
+                        for (int j = 0; j <= body.Count() + 2; j++){
+                            if (Raylib.CheckCollisionRecs(playerVars, new Rectangle((int)autoPosses[j].X, (int)autoPosses[j].Y, 50, 50)))
                                 return true;
+                        }
+                    }
+                }
             }
-
-
-
-
-
-
 
             if (Raylib.CheckCollisionRecs(playerVars, gameField.getTopWall()) ||
                 Raylib.CheckCollisionRecs(playerVars, gameField.getBottomWall()) ||
@@ -604,7 +601,7 @@ namespace raylibShenanigans
                         if (headPoses.count() > body.Count * 2){
                             headPoses.removeAt(headPoses.count() - 1);
                         }
-                        if (autoPosses.Count >= body.Count * 10){
+                        if (autoPosses.Count >= body.Count * 11){
                             autoPosses.RemoveAt(0);
                         }
                     }
@@ -643,62 +640,6 @@ namespace raylibShenanigans
             body.Add(2);
             headPoses = new Set();
         }
-        void resetHeadSprite()
-        {
-            // Fixing the sprite rotation
-            //for left
-            if (facingRight == true)
-            {
-                Raylib.ImageFlipHorizontal(ref playerSprite);
-            }
-            else if (facingUp == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            else if (facingDown == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            //for right
-            if (facingLeft == true)
-            {
-                Raylib.ImageFlipHorizontal(ref playerSprite);
-            }
-            else if (facingUp == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            else if (facingDown == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            //for up
-            if (facingDown == true)
-            {
-                Raylib.ImageFlipVertical(ref playerSprite);
-            }
-            else if (facingRight == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-            else if (facingLeft == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            //for down
-            if (facingUp == true)
-            {
-                Raylib.ImageFlipVertical(ref playerSprite);
-            }
-            else if (facingRight == true)
-            {
-                Raylib.ImageRotateCW(ref playerSprite);
-            }
-            else if (facingLeft == true)
-            {
-                Raylib.ImageRotateCCW(ref playerSprite);
-            }
-        }
         // Saving
         public void saveBestScore()
         {   if(body.Count > bestScore)
@@ -706,7 +647,10 @@ namespace raylibShenanigans
         }
         public void load()
         {
-            bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
+            // For My Pc
+            bestScore = int.Parse(File.ReadAllText("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\data.txt"));
+            // For School Pc
+            //bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
         }
     }
 }
