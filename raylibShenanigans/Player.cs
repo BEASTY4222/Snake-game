@@ -131,7 +131,7 @@ namespace raylibShenanigans
                 Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
 
                 Raylib.DrawRectangleLines(500, 230, 425, 250, Color.Black);
-                Raylib.DrawText("Press any key to start", 520, 250, 30, Color.Black);
+                Raylib.DrawText("Press left to start", 520, 250, 30, Color.Black);
                 Raylib.DrawText("Rules:", 660, 290, 30, Color.Black);
                 Raylib.DrawText("1.Don't move in the opposite ", 550, 320, 25, Color.Black);
                 Raylib.DrawText("dirrection of your head", 565, 340, 25, Color.Black);
@@ -155,7 +155,7 @@ namespace raylibShenanigans
                 }
 
                 // Credits
-                Raylib.DrawText("CREDITS", 600, 150, 50, Color.Black);
+                Raylib.DrawText("CREDITS:", 25, 600, 25, Color.Black);
                 Raylib.DrawText("Game programmer: Ivan Georgiev", 25, 620, 20, Color.Black);
                 Raylib.DrawText("Game designer: Maria Gencheva", 25, 640, 20, Color.Black);
                 //Raylib.DrawText("Music composer: ", 25, 660, 20, Color.Black);
@@ -165,8 +165,7 @@ namespace raylibShenanigans
                 Raylib.DrawText("SCORE: " + Convert.ToString(body.Count - 1), 630, 40, 35, Color.Black);
                 Raylib.DrawText("best score: " + bestScore, 640, 70, 20, Color.Black);
             }
-        }
-        
+        }    
         // Collision
         private bool checkIfColliding(GameField gameField)
         {
@@ -225,7 +224,6 @@ namespace raylibShenanigans
             }
 
         }
-
         // Eating
         public void eatApple(GameField gameField)
         {
@@ -238,7 +236,6 @@ namespace raylibShenanigans
                 }
             }
         }
-
         // Movement 
         public void moveLeft(bool manual){
             if(manual){
@@ -515,12 +512,14 @@ namespace raylibShenanigans
             }
             else if (movementMode == "automatic")
             {
-                if(onceForAutoMovement)
-                {
+                startedPlaying = true;
+                sittingStill = false;
+
+                if (onceForAutoMovement){
                     facingLeft = true;
                     onceForAutoMovement = false;
                 }
-                
+
                 if (facingLeft)
                     playerVars.X -= AUTO_MOVE;
                 if (facingRight)
@@ -529,8 +528,7 @@ namespace raylibShenanigans
                     playerVars.Y -= AUTO_MOVE;
                 if (facingDown)
                     playerVars.Y += AUTO_MOVE;
-                startedPlaying = true;
-                sittingStill = false;
+               
                 if (Raylib.IsKeyPressed(KeyboardKey.A) || Raylib.IsKeyPressed(KeyboardKey.Left))
                     moveLeft(false);
 
@@ -614,13 +612,19 @@ namespace raylibShenanigans
         public void reset()
         {
             // Fixing the sprite rotation
-            //resetHeadSprite();
+            if (facingRight == true)
+                Raylib.ImageFlipHorizontal(ref playerSprite);
+            if (facingUp == true)
+                Raylib.ImageRotateCCW(ref playerSprite);
+            if (facingDown == true)
+                Raylib.ImageRotateCW(ref playerSprite);
 
-            facingLeft = false;
+            facingLeft = true;
             facingRight = false;
             facingUp = false;
             facingDown = false;
 
+            // Reset to default
             playerVars.X = 700;
             playerVars.Y = 500;
             playerVars.Width = 50;
@@ -645,13 +649,7 @@ namespace raylibShenanigans
         }
         public void load()
         {
-            // For My Pc
-            //bestScore = int.Parse(File.ReadAllText("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\data.txt"));
-            // For School Pc
-            //bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
-            // For .exe
             bestScore = int.Parse(File.ReadAllText("assets\\data.txt"));
-
         }
     }
 }
