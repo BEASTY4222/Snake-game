@@ -126,6 +126,7 @@ namespace raylibShenanigans
         public void drawScore(){
             if (!startedPlaying)
             {
+                // Start menu and rules
                 Raylib.DrawRectangleLines(25, 365, 245, 30, Color.Black);
                 Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
 
@@ -140,6 +141,7 @@ namespace raylibShenanigans
                 Raylib.DrawText("manual to automatic movement", 550, 420, 25, Color.Black);
                 Raylib.DrawText("current mode - " + movementMode, 550, 440, 25, Color.Black);
 
+                // Movement mode switch
                 if (Raylib.IsKeyPressed(KeyboardKey.F))
                 {
                     if (movementMode == "manual")
@@ -151,6 +153,12 @@ namespace raylibShenanigans
                         movementMode = "manual";
                     }
                 }
+
+                // Credits
+                Raylib.DrawText("CREDITS", 600, 150, 50, Color.Black);
+                Raylib.DrawText("Game programmer: Ivan Georgiev", 25, 620, 20, Color.Black);
+                Raylib.DrawText("Game designer: Maria Gencheva", 25, 640, 20, Color.Black);
+                //Raylib.DrawText("Music composer: ", 25, 660, 20, Color.Black);
             }
             else
             {
