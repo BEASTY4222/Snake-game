@@ -18,6 +18,16 @@ namespace raylibShenanigans
 {
     internal class Player
     {
+        /*
+             I want the game to be run from exe so the paths are for that
+            and also its a pain changing paths every time I want to test something
+            the command to build exe is:
+            dotnet publish raylibShenanigans.sln -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
+            and it should be ran in the folder where the .sln file is!!!
+            
+            I had alot of fun making this project and learning raylib with C#
+            it was intresting seeing the similarities and differences between C++ and C# raylib usage
+        */
         private const int MOVE_FOWARD = 50;
         private const int AUTO_MOVE = 5;
         
@@ -46,7 +56,6 @@ namespace raylibShenanigans
         private bool startedPlaying;
         private string deathMessege;
         private string movementMode;
-        private string initialDirection;
         private bool onceForAutoMovement;//for automatic movement initial direction (cuss I can't code )
         private bool onceForManualDirection;
 
@@ -56,16 +65,8 @@ namespace raylibShenanigans
         public Player() { }
         public Player(int x, int y) {
             // Textures and sprites
-
-            // For school PC
-            //playerSprite =  Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeHead.png");
-            //bodySprite = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\snakeBody.png");
-            // For my PC
-            playerSprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeHead.png");
-            bodySprite = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\snakeBody.png");
-            // For .exe
-            //playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
-            //bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
+            playerSprite = Raylib.LoadImage("assets\\snakeHead.png");
+            bodySprite = Raylib.LoadImage("assets\\snakeBody.png");
 
             
             playerVars.X = x;
@@ -85,7 +86,6 @@ namespace raylibShenanigans
             startedPlaying = false;
             deathMessege = "";
             movementMode = "manual";
-            initialDirection = "";
             onceForAutoMovement = true;
             onceForManualDirection = true;
 
@@ -293,11 +293,6 @@ namespace raylibShenanigans
                 }
                 facingRight = true;
 
-                if (onceForManualDirection){
-                    initialDirection = "right";
-                    onceForManualDirection = false;
-                }
-
                 playerVars.X += MOVE_FOWARD;
                 if (facingLeft == true)
                 {
@@ -414,11 +409,6 @@ namespace raylibShenanigans
                 }
                 facingDown = true;
 
-                if (onceForManualDirection)
-                {
-                    initialDirection = "down";
-                    onceForManualDirection = false;
-                }
                 playerVars.Y += MOVE_FOWARD;
 
                 if (facingUp == true)
@@ -643,14 +633,17 @@ namespace raylibShenanigans
         // Saving
         public void saveBestScore()
         {   if(body.Count > bestScore)
-                File.WriteAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt", Convert.ToString(body.Count - 1));
+                File.WriteAllText("assets\\data.txt", Convert.ToString(body.Count - 1));
         }
         public void load()
         {
             // For My Pc
-            bestScore = int.Parse(File.ReadAllText("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\data.txt"));
+            //bestScore = int.Parse(File.ReadAllText("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\data.txt"));
             // For School Pc
             //bestScore = int.Parse(File.ReadAllText("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\data.txt"));
+            // For .exe
+            bestScore = int.Parse(File.ReadAllText("assets\\data.txt"));
+
         }
     }
 }

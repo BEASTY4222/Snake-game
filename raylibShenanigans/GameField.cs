@@ -24,12 +24,7 @@ namespace raylibShenanigans
 
         // Constructor
         public GameField(int PosX,int PosY){
-            // For school PC 
-            //apple = Raylib.LoadImage("C:\\Users\\USER69\\Desktop\\11B IG\\Informatik\\C#\\raylibShenanigans\\apple.png");
-            // My PC
-            apple = Raylib.LoadImage("C:\\Users\\IvanSuperPC\\source\\repos\\BEASTY4222\\Snake-game\\apple.png");
-            // For .exe
-            //apple = Raylib.LoadImage("assets\\apple.png");
+            apple = Raylib.LoadImage("assets\\apple.png");
 
             // apple vars
             appleVars.X = PosX;
@@ -63,7 +58,6 @@ namespace raylibShenanigans
         public Rectangle getRightWall() {  return rightWall; }
 
         // Cherry stuff down from here
-
         // Getters
         public Rectangle getAppleVars() { return appleVars; }
 
