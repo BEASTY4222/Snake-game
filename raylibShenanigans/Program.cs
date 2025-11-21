@@ -22,7 +22,7 @@ class Program
             if (player.getStatus()){
                 player.handleMovement(gameField);
 
-                player.drawScore();
+                player.drawScore(gameField);
                 player.drawPlayer();
                 gameField.drawApples();
                 gameField.drawWalls();

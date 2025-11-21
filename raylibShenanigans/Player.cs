@@ -123,12 +123,21 @@ namespace raylibShenanigans
             }
         }
         // Score and start text
-        public void drawScore(){
+        public void drawScore(GameField gameField){
             if (!startedPlaying)
             {
                 // Start menu and rules
-                Raylib.DrawRectangleLines(25, 365, 245, 30, Color.Black);
-                Raylib.DrawText("Eat this to gain points", 30, 370, 20, Color.Black);
+                if ((int)gameField.getAppleVars().Y > 350)
+                {
+                    Raylib.DrawRectangleLines((int)gameField.getAppleVars().X - 55, (int)gameField.getAppleVars().Y - 56, 250, 30, Color.Black);
+                    Raylib.DrawText("Eat this to gain points", (int)gameField.getAppleVars().X - 50, (int)gameField.getAppleVars().Y - 55, 20, Color.Black);
+                }
+                else
+                {
+                    Raylib.DrawRectangleLines((int)gameField.getAppleVars().X - 55, (int)gameField.getAppleVars().Y + 50, 250, 30, Color.Black);
+                    Raylib.DrawText("Eat this to gain points", (int)gameField.getAppleVars().X - 50, (int)gameField.getAppleVars().Y + 55, 20, Color.Black);
+                }
+                    
 
                 Raylib.DrawRectangleLines(500, 230, 425, 250, Color.Black);
                 Raylib.DrawText("Press left to start", 520, 250, 30, Color.Black);
@@ -299,6 +308,16 @@ namespace raylibShenanigans
                 facingRight = true;
 
                 playerVars.X += MOVE_FOWARD;
+
+                if (onceForManualDirection)
+                {
+                    if (!facingRight || !facingDown || !facingUp || !facingLeft)
+                    {
+                        facingLeft = true;
+                        onceForManualDirection = false;
+                    }
+                }
+
                 if (facingLeft == true)
                 {
                     Raylib.ImageFlipHorizontal(ref playerSprite);
@@ -416,6 +435,16 @@ namespace raylibShenanigans
 
                 playerVars.Y += MOVE_FOWARD;
 
+
+                if (onceForManualDirection)
+                {
+                    if (!facingRight || !facingDown || !facingUp || !facingLeft)
+                    {
+                        facingLeft = true;
+                        onceForManualDirection = false;
+                    }
+                }
+
                 if (facingUp == true)
                 {
                     Raylib.ImageFlipVertical(ref playerSprite);
@@ -508,7 +537,6 @@ namespace raylibShenanigans
                     sittingStill = true;
                     handleHeadPoses();
                 }
-
             }
             else if (movementMode == "automatic")
             {
